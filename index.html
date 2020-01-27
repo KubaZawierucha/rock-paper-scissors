@@ -5,6 +5,50 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    
+
+
+
+    <script>
+        
+        let playerMove;// = prompt("Choose either: Rock, Paper or Scissors!", "");
+        verifyMove();
+        
+        let computerMove = computerPlay();
+        
+        console.log(playerMove);
+        console.log(computerMove);
+
+        function playRound(playerSelection, computerSelection) {
+
+        }
+        
+        function computerPlay() {
+            let possibleMoves = ["Rock", "Paper", "Scissors"];
+            let index = random(possibleMoves.length, 0);
+
+            return possibleMoves[index];
+        }
+
+        function random(max, min) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function makeFirstCapital(string) {
+            //if (string === "" || string === null) {
+            //    return string;
+           // }
+
+            let newString = string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+            return newString;
+        }
+
+        function verifyMove() {
+            while (playerMove !== "Rock" && playerMove !== "Paper" && playerMove !== "Scissors") {
+                playerMove = prompt("Choose either: Rock, Paper or Scissors!", "");
+                playerMove = makeFirstCapital(playerMove);
+            }
+        }
+
+    </script>
 </body>
 </html>
