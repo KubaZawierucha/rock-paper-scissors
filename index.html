@@ -10,16 +10,69 @@
 
     <script>
         
-        let playerMove;// = prompt("Choose either: Rock, Paper or Scissors!", "");
+        let playerMove;
         verifyMove();
         
         let computerMove = computerPlay();
         
-        console.log(playerMove);
-        console.log(computerMove);
+        //console.log(playerMove);
+        //console.log(computerMove);
+        console.log(playRound(playerMove, computerMove));
 
         function playRound(playerSelection, computerSelection) {
+            let result = "You";
+            let varRockScissors = " Rock beats Scissors.";
+            let varScissorsPaper = " Scissors beats Paper.";
+            let varPaperRock = " Paper beats Rock.";
 
+            console.log("Your move: " + playerMove);
+            console.log("Computer move: " + computerMove);
+            
+            switch (playerSelection) {
+                case "Rock": 
+                    switch (computerSelection) {
+                        case "Rock": 
+                            result += " Draws!";                
+                        break;
+                        case "Paper":
+                            result += " Lose!" + varPaperRock;
+                        break;
+                        case "Scissors":
+                            result += " Win!" + varRockScissors;
+                        break;
+                    }
+                break;
+                
+                case "Paper":
+                    switch (computerSelection) {
+                        case "Rock": 
+                            result += " Win!" + varPaperRock;                
+                        break;
+                        case "Paper":
+                            result += " Draw!";
+                        break;
+                        case "Scissors":
+                            result += " Lose!" + varScissorsPaper;
+                        break;
+                    }
+                break;
+                
+                case "Scissors":
+                    switch (computerSelection) {
+                        case "Rock": 
+                            result += " Lose!" + varRockScissors;                
+                        break;
+                        case "Paper":
+                            result += " Win!" + varScissorsPaper;
+                        break;
+                        case "Scissors":
+                            result += " Draw!";
+                        break;
+                    }
+                break;
+            }
+
+            return result;
         }
         
         function computerPlay() {
@@ -34,10 +87,6 @@
         }
 
         function makeFirstCapital(string) {
-            //if (string === "" || string === null) {
-            //    return string;
-           // }
-
             let newString = string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
             return newString;
         }
