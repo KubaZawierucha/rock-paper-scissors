@@ -10,35 +10,66 @@
 
     <script>
         
-        let playerMove;
-        verifyMove();
-        
-        let computerMove = computerPlay();
-        
-        //console.log(playerMove);
-        //console.log(computerMove);
-        console.log(playRound(playerMove, computerMove));
+        game();
 
+        function game() {
+            let roundsNumber = prompt("How many rounds do you want to play? (Please, make it an integer, I did not add any error handling :()", 5);
+            let userScore = 0;
+            let computerScore = 0;
+
+            console.log("Game Starts!");
+
+            for (i = 1; i < +roundsNumber + 1; i++) {
+                console.log("Round " + i);
+                let playerMove = verifyMove();
+                let computerMove = computerPlay();
+
+                let winner = playRound(playerMove, computerMove);
+                switch(winner) {
+                    case "User":
+                        userScore++;
+                    break;
+                    
+                    case "Computer":
+                        computerScore++;
+                    break;
+
+                    default:
+                        userScore++;
+                        computerScore++;    
+                }
+
+                console.log("Current score: " + userScore + " : " + computerScore + " (User : Computer)");
+            }
+
+        }
+        
         function playRound(playerSelection, computerSelection) {
             let result = "You";
             let varRockScissors = " Rock beats Scissors.";
             let varScissorsPaper = " Scissors beats Paper.";
             let varPaperRock = " Paper beats Rock.";
+            let possibleWinner = ["User", "Computer", "None"];
 
-            console.log("Your move: " + playerMove);
-            console.log("Computer move: " + computerMove);
+            let winner;
+
+            console.log("Your move: " + playerSelection);
+            console.log("Computer move: " + computerSelection);
             
             switch (playerSelection) {
                 case "Rock": 
                     switch (computerSelection) {
                         case "Rock": 
-                            result += " Draws!";                
+                            result += " Draws!";
+                            winner = possibleWinner[2];     
                         break;
                         case "Paper":
                             result += " Lose!" + varPaperRock;
+                            winner = possibleWinner[1];     
                         break;
                         case "Scissors":
                             result += " Win!" + varRockScissors;
+                            winner = possibleWinner[0];     
                         break;
                     }
                 break;
@@ -47,12 +78,15 @@
                     switch (computerSelection) {
                         case "Rock": 
                             result += " Win!" + varPaperRock;                
+                            winner = possibleWinner[0];     
                         break;
                         case "Paper":
                             result += " Draw!";
+                            winner = possibleWinner[2];     
                         break;
                         case "Scissors":
                             result += " Lose!" + varScissorsPaper;
+                            winner = possibleWinner[1];     
                         break;
                     }
                 break;
@@ -61,18 +95,22 @@
                     switch (computerSelection) {
                         case "Rock": 
                             result += " Lose!" + varRockScissors;                
+                            winner = possibleWinner[1];     
                         break;
                         case "Paper":
                             result += " Win!" + varScissorsPaper;
+                            winner = possibleWinner[0];     
                         break;
                         case "Scissors":
                             result += " Draw!";
+                            winner = possibleWinner[2];     
                         break;
                     }
                 break;
             }
-
-            return result;
+            
+            console.log(result);
+            return winner;
         }
         
         function computerPlay() {
@@ -92,10 +130,13 @@
         }
 
         function verifyMove() {
+            let playerMove = "";
             while (playerMove !== "Rock" && playerMove !== "Paper" && playerMove !== "Scissors") {
                 playerMove = prompt("Choose either: Rock, Paper or Scissors!", "");
                 playerMove = makeFirstCapital(playerMove);
             }
+
+            return playerMove;
         }
 
     </script>
