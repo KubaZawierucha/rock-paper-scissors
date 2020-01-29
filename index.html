@@ -3,45 +3,101 @@
 <head>
     <title>Rock Paper Scissors</title>
     <meta charset="UTF-8">
+    <style>
+        
+        body {
+            text-align: center;
+            font-size: 2em;
+            padding-top: 200px;
+        }
+
+        #main-header h1 {
+            margin-bottom: 4px;
+        }
+
+        #author {
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        #choice-buttons {
+            margin-top: 50px;
+        }
+
+        button {
+            font-size: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            width: 250px;
+            font-weight: bold;
+            margin-right: 30px;
+            margin-left: 30px;
+            margin-top: 20px;
+        }
+
+        #result-container {
+            margin-top: 50px;
+        }
+
+    </style>
 </head>
 <body>
 
+    <div id="main-header">
+        <h1>Rock-Paper-Scissors</h1>
+        <p id="author">By Kuba Zawierucha</p>
+    </div>
+
+    <div id="choice-buttons">
+        <button id="rock-btn">Rock</button>
+        <button id="paper-btn">Paper</button>
+        <button id="scissors-btn">Scissors</button>
+    </div>
+
+    <div id="result-container">
+    </div>
 
 
     <script>
         
+        const choiceButtons = Array.from(document.querySelectorAll("button"));
+        const resultContainer = document.querySelector("#result-container");
+        const resultText = document.createElement("p");
+        const currentScoreText = document.createElement("p");
+
+        let userScore = 0;
+        let computerScore = 0;
+
+
+        console.log(choiceButtons);
+
+
         game();
 
         function game() {
-            let roundsNumber = prompt("How many rounds do you want to play? (Please, make it an integer, I did not add any error handling :()", 5);
-            let userScore = 0;
-            let computerScore = 0;
+            let maxPoints = 5;
 
             console.log("Game Starts!");
 
-            for (i = 1; i < +roundsNumber + 1; i++) {
-                console.log("Round " + i);
-                let playerMove = verifyMove();
-                let computerMove = computerPlay();
-
-                let winner = playRound(playerMove, computerMove);
-                switch(winner) {
-                    case "User":
-                        userScore++;
-                    break;
-                    
-                    case "Computer":
-                        computerScore++;
-                    break;
-
-                    default:
-                        userScore++;
-                        computerScore++;    
-                }
-
-                console.log("Current score: " + userScore + " : " + computerScore + " (User : Computer)");
+            if (userScore < maxPoints && computerScore < maxPoints) {
+                    choiceButtons.forEach(button => button.addEventListener('click', () => { 
+                        let computerMove = computerPlay();
+                        let playerMove = button.textContent;
+                        playRound(playerMove, computerMove);
+                        currentScoreText.textContent = "Current score: " + userScore + " : " + computerScore + " (User : Computer)";
+                        resultContainer.appendChild(currentScoreText);
+                        console.log("Current score: " + userScore + " : " + computerScore + " (User : Computer)");
+                        
+                        if (userScore >= maxPoints || computerScore >= maxPoints) {
+                            const nodeToRemove = document.querySelector("#choice-buttons");
+                            document.body.removeChild(nodeToRemove);
+                            resultText.remove();
+                            currentScoreText.textContent = "Game Ended! Final score: " + userScore + " : " + computerScore + " (User : Computer)"
+                        }
+                }));
+            } else {
+                currentScoreText.textContent = "Game Ended!";
             }
-
         }
         
         function playRound(playerSelection, computerSelection) {
@@ -49,9 +105,6 @@
             let varRockScissors = " Rock beats Scissors.";
             let varScissorsPaper = " Scissors beats Paper.";
             let varPaperRock = " Paper beats Rock.";
-            let possibleWinner = ["User", "Computer", "None"];
-
-            let winner;
 
             console.log("Your move: " + playerSelection);
             console.log("Computer move: " + computerSelection);
@@ -61,15 +114,16 @@
                     switch (computerSelection) {
                         case "Rock": 
                             result += " Draws!";
-                            winner = possibleWinner[2];     
+                            computerScore++;
+                            userScore++;     
                         break;
                         case "Paper":
-                            result += " Lose!" + varPaperRock;
-                            winner = possibleWinner[1];     
+                            result += " Lose!" + varPaperRock;   
+                            computerScore++;
                         break;
                         case "Scissors":
                             result += " Win!" + varRockScissors;
-                            winner = possibleWinner[0];     
+                            userScore++;
                         break;
                     }
                 break;
@@ -78,15 +132,16 @@
                     switch (computerSelection) {
                         case "Rock": 
                             result += " Win!" + varPaperRock;                
-                            winner = possibleWinner[0];     
+                            userScore++;
                         break;
                         case "Paper":
                             result += " Draw!";
-                            winner = possibleWinner[2];     
+                            computerScore++;
+                            userScore++;
                         break;
                         case "Scissors":
                             result += " Lose!" + varScissorsPaper;
-                            winner = possibleWinner[1];     
+                            computerScore++;
                         break;
                     }
                 break;
@@ -95,22 +150,23 @@
                     switch (computerSelection) {
                         case "Rock": 
                             result += " Lose!" + varRockScissors;                
-                            winner = possibleWinner[1];     
+                            computerScore++;
                         break;
                         case "Paper":
                             result += " Win!" + varScissorsPaper;
-                            winner = possibleWinner[0];     
+                            userScore++;
                         break;
                         case "Scissors":
                             result += " Draw!";
-                            winner = possibleWinner[2];     
+                            computerScore++;
+                            userScore++;
                         break;
                     }
                 break;
             }
             
-            console.log(result);
-            return winner;
+            resultText.textContent = result;
+            resultContainer.appendChild(resultText);
         }
         
         function computerPlay() {
@@ -122,21 +178,6 @@
 
         function random(max, min) {
             return Math.floor(Math.random() * (max - min)) + min;
-        }
-
-        function makeFirstCapital(string) {
-            let newString = string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
-            return newString;
-        }
-
-        function verifyMove() {
-            let playerMove = "";
-            while (playerMove !== "Rock" && playerMove !== "Paper" && playerMove !== "Scissors") {
-                playerMove = prompt("Choose either: Rock, Paper or Scissors!", "");
-                playerMove = makeFirstCapital(playerMove);
-            }
-
-            return playerMove;
         }
 
     </script>
